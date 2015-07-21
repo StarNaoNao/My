@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+	<display-name>mybatis</display-name>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:context/spring.xml,classpath:context/spring-mybatis.xml</param-value>
+	</context-param>
+	
+	<filter>
+		<description>字符集过滤器</description>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<description>字符集编码</description>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- 自定义Filter测试 -->
+	<!-- <filter>
+		<filter-name>FilterTest</filter-name>
+		<filter-class>com.filterTest.FilterTest</filter-class>
+		<init-param>
+			<param-name>age</param-name>
+			<param-value>25</param-value> 
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>FilterTest</filter-name>
+		加上这个，则拦截所有url请求。下面拦截时也可以按后缀名拦截，比如.html和.do区分着拦截
+		<url-pattern>/*</url-pattern>
+		<servlet-name>FilterServlet_Test</servlet-name>
+		<dispatcher>REQUEST</dispatcher> 没有配置dispatcher就是默认request方式的 
+	    <dispatcher>FORWARD</dispatcher> 
+	    <dispatcher>ERROR</dispatcher> 
+	    <dispatcher>INCLUDE</dispatcher> 
+	</filter-mapping>
+	
+	
+	 --><!-- <filter>
+		<filter-name>FilterTest001</filter-name>
+		<filter-class>com.filterTest.FilterTest001</filter-class>
+		<init-param>
+			<param-name>age</param-name>
+			<param-value>25</param-value> 
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>FilterTest001</filter-name>
+		加上这个，则拦截所有url请求。下面拦截时也可以按后缀名拦截，比如.html和.do区分着拦截
+		<url-pattern>/*</url-pattern>
+		<servlet-name>Servlet_test</servlet-name>
+		<dispatcher>REQUEST</dispatcher> 没有配置dispatcher就是默认request方式的 
+	    <dispatcher>FORWARD</dispatcher> 
+	    <dispatcher>ERROR</dispatcher> 
+	    <dispatcher>INCLUDE</dispatcher> 
+	</filter-mapping> -->
+	<listener>
+		<description>spring监听器</description>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- 防止spring内存溢出监听器 -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<!-- spring mvc servlet -->
+	<servlet>
+		<description>spring mvc servlet</description>
+		<servlet-name>springMvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<description>spring mvc 配置文件</description>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:context/spring-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+ 	<servlet>
+ 	   <servlet-name>FilterServlet_Test</servlet-name>
+ 	   <servlet-class>com.filterTest.FilterServlet_Test</servlet-class>
+ 	 </servlet>
+  <servlet>
+    <servlet-name>Servlet_test</servlet-name>
+    <servlet-class>com.filterTest.Servlet_test</servlet-class>
+  </servlet>
+
+
+	<servlet-mapping>
+		<servlet-name>springMvc</servlet-name>  
+		<url-pattern>*.html</url-pattern>     <!-- 加上.html表示，可拦截结尾是.html的url，下边一样 -->
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>springMvc</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+    <servlet-mapping>
+      <servlet-name>FilterServlet_Test</servlet-name>
+      <url-pattern>/servlet/FilterServlet_Test</url-pattern>
+    </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet_test</servlet-name>
+    <url-pattern>/servlet/Servlet_test</url-pattern>
+  </servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<!-- 配置session超时时间，单位分钟 -->
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
+</web-app>

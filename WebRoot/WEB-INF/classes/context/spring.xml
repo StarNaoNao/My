@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xmlns:context="http://www.springframework.org/schema/context" 
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd   
+           http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   
+           http://www.springframework.org/schema/tx      http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+">
+
+	<!-- 引入aspectj形式的aop注解 -->
+	<aop:aspectj-autoproxy/>
+	
+	<bean id="aspect" class="com.annotation.MyInterceptor" />  
+	<bean id="person" class="com.annotation.PersonImpl">  
+	  <property name="name" value="good"></property>  
+	  <property name="age" value="22"></property> 
+	</bean>  
+	
+	 <!-- 引入属性文件 -->
+	<!--<context:property-placeholder location="classpath:config.properties" />
+	 -->
+	<!-- 将属性文件加载到类 -->
+	<!-- 定义受环境影响易变的变量 -->
+	<bean id="propertyConfigurer" class="com.myIbatis.test.util.PropertyConfigurer" factory-method="getInstance" lazy-init="false">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<!-- 标准配置 -->
+				<value>classpath*:/conf/application.properties</value>
+				<value>classpath*:/conf/dataSource.properties</value>
+				<value>classpath*:/conf/extConf.properties</value>
+				<value>classpath*:config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 自动扫描(自动注入) -->
+	<context:component-scan base-package="com.myIbatis.test" />
+
+
+</beans>

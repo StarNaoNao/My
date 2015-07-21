@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:aop="http://www.springframework.org/schema/aop"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+ http://www.springframework.org/schema/aop
+ http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+ 
+ 	<!-- 对切点的处理函数 -->
+	<bean id="testTag" class="com.aoptag.AopAdvice"></bean>
+	
+	<!-- 配置的主体部分 -->
+	<aop:config>
+	  <aop:aspect id="logging" ref="testTag">
+	   <!-- before，切点执行前要执行的工作。 -->
+	   <aop:before pointcut="execution(* com.aoptag.IHello.*(..))"
+	   method="adviceTest"/>
+	  </aop:aspect>
+	</aop:config>
+	
+	<bean id="helloImpl" class="com.aoptag.HelloImpl"></bean>
+	
+</beans>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!--  Spring配置文件的文件头-->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+ "http://www.springframework.org/dtd/spring-beans.dtd">
+ 
+ <!-- 	
+	该配置文件使用ProxyFactoryBean来生成代理对象，配置ProxyFactoryBean工厂bean时，
+	指定了target属性，该属性值就是目标对象，该属性值为personTarget，指定代理的目标对象为
+	personTarget。通过interceptorNames属性确定代理需要的拦截器，拦截器可以是普通的Advice，
+	普通Advice将对目标对象的所有方法起作用;拦截器也可以是Advisor，Advisor是Advice和切面的组合
+	，用于确定目标对象的哪些方法需要增加处理，以及怎样的处理。在下面的配置文件中，使用了三个拦截器，
+	其中myAdvice、myAroundInterceptor都是普通Advice，它们将对目标对象的所有方法起作用。
+	而runAdvisor则使用了正则表达式切面，匹配run方法，即该拦截器只对目标对象的run方法起作用。 
+-->
+
+<!--  Spring配置文件的根元素-->
+<beans>
+ <!--  配置目标对象-->
+ <bean id="personTarget" class="lee.PersonImpl">
+	  <!--  为目标对象注入name属性值-->
+	  <property name="name">
+	 	  <value>Wawa</value>
+	  </property>
+	  <!--  为目标对象注入age属性值-->
+	  <property name="age">
+	  	 <value>51</value>
+	  </property>
+ </bean>
+ <!--  第一个拦截器-->
+ <bean id="myAdvice" class="lee.MyBeforeAdvice"/>
+ 
+ <!--  第二个拦截器-->
+ <bean id="myAroundInterceptor" class="lee.MyAroundInterceptor"/>
+ 
+ <!--  将拦截器包装成Advisor，该对象还确定代理对怎样的方法增加处理-->
+ <bean id="runAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+	  <!--  advice属性确定处理bean-->
+	  <property name="advice">
+		   <!-- 此处的处理bean定义采用嵌套bean,也可引用容器的另一个bean-->
+		   <bean class="lee.MyAfterAdvice"/>
+	  </property>
+	  <!--  patterns确定正则表达式模式,指该拦截器只在拦截到匹配到的方法时才调用-->
+	  <property name="patterns">
+		   <list>
+		    <!--  确定正则表达式列表-->
+		    <value>.*run.*</value>
+		   </list>
+	  </property>
+ </bean>
+ 
+ <!--  使用ProxyFactoryBean 产生代理对象-->
+ <bean id="person" class="org.springframework.aop.framework.ProxyFactoryBean">
+	  <!--  代理对象所实现的接口-->
+	  <property name="proxyInterfaces">
+	   	<value>lee.Person</value>
+	  </property>
+	  <!--  设置目标对象-->
+	  <property name="target">
+	 	  <ref local="personTarget"/>  
+	  </property>
+	  <!--  代理对象所使用的拦截器-->
+	  <property name="interceptorNames">
+		   <list>
+		    <value>runAdvisor</value>
+		    <value>myAdvice</value>
+		    <value>myAroundInterceptor</value>
+		   </list>
+	  </property>
+ </bean>
+</beans>

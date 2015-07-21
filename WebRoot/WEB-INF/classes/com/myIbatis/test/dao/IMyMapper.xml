@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myIbatis.test.dao.IMyMapper">
+	 <resultMap id="MyMap" type="com.myIbatis.test.entity.User">
+		<id property="id" column="STUDENTID" />
+		<result property="age" column="AGE" />
+		<result property="name" column="NAME" />
+		<result property="sex" column="SEX" />
+	</resultMap>
+	
+	<select id="getUsers" resultType="com.myIbatis.test.entity.User"> <!-- 这个也可以： resultMap="MyMap"> -->
+		select * from student
+	</select>
+	
+	<select id="getUserByName" parameterType="string" resultMap="MyMap">
+		select * from student where name = #{name}
+	</select>
+	
+	<!-- 查询所有警情会商 -->
+	<select id="getAllJqhs" resultType="java.util.HashMap">
+		select t.ZJID,t.HSBT,t.HSZT,t.HSZJR,t.HSZJRXM,to_char(t.ZJSJ,'yyyy-mm-dd hh24:mi:ss') zjsjStr,
+					to_char(t.KSSJ,'yyyy-mm-dd hh24:mi:ss') kssjStr,t.HSZTXX,to_char(sysdate,'yyyy-mm-dd hh24:mi:ss') systime
+			from  TA_JQHS t
+			order by kssjStr desc 
+	</select>
+	
+	
+<!--
+	<select id="getBjxxList" resultType="java.util.HashMap">
+		select t_sort.* from (
+			select t.id,t.mp_id,t.message,to_char(t.xzsj,'yyyy-mm-dd hh24:mi:ss') xzsjStr,m.remark mpname from  DQB_MESSAGE t ,DQB_MP m
+				where 1=1 and t.mp_id = m.id
+				<if test="mpid != null"> 
+				and t.mp_id like '%'||#{mpid}||'%' 
+				</if>
+				<if test="message != null"> 
+				and t.message like '%'||#{message}||'%' 
+				</if>
+				<if test="datefrom != null">
+				and to_char(t.xzsj,'yyyy-mm-dd') <![CDATA[  >=  ]]> #{datefrom}
+				</if>
+				<if test="dateto != null">
+				and to_char(t.xzsj,'yyyy-mm-dd') <![CDATA[  <=  ]]> #{dateto}
+				</if>
+				<if test="time != null">
+				and to_char(t.xzsj,'yyyy-mm-dd hh24:mi:ss') <![CDATA[  >  ]]> #{time}
+				</if>
+				order by xzsjStr desc ) t_sort
+				where rownum <![CDATA[  <=  ]]> 20
+	</select>
+	
+	<select id="getBjxxAfterTime" parameterType="string" resultType="java.util.HashMap">
+			select t.id,t.mp_id,t.message,to_char(t.xzsj,'yyyy-mm-dd hh24:mi:ss') xzsjStr,m.remark mpname from  DQB_MESSAGE t ,DQB_MP m
+				where t.mp_id = m.id and
+				to_char(t.xzsj,'yyyy-mm-dd hh24:mi:ss') <![CDATA[  >  ]]> #{time}
+				order by xzsjStr desc
+	</select>
+	
+	<select id="getAllBjxxList" resultType="java.util.HashMap">
+			select t.id,t.mp_id,t.message,to_char(t.xzsj,'yyyy-mm-dd hh24:mi:ss') xzsjStr,m.remark mpname from  DQB_MESSAGE t ,DQB_MP m
+				where 1=1 and t.mp_id = m.id
+				<if test="mpname != null"> 
+				and m.remark like '%'||#{mpname}||'%' 
+				</if>
+				<if test="message != null"> 
+				and t.message like '%'||#{message}||'%' 
+				</if>
+				<if test="datefrom != null">
+				and to_char(t.xzsj,'yyyy-mm-dd') <![CDATA[  >=  ]]> #{datefrom}
+				</if>
+				<if test="dateto != null">
+				and to_char(t.xzsj,'yyyy-mm-dd') <![CDATA[  <=  ]]> #{dateto}
+				</if>
+				order by xzsjStr desc 
+	</select>
+	
+	<select id="getBjxxById" parameterType="string" resultType="map">
+		select t.id,t.mp_id,t.message,to_char(t.xzsj,'yyyy-mm-dd hh24:mi:ss') xzsjStr,m.remark mpname from DQB_MESSAGE t,DQB_MP m
+	    where t.id = #{id} and t.mp_id = m.id
+	</select>
+	
+	<select id="getBjxxByMpId" parameterType="string" resultMap="bjxxMap">
+		select * from DQB_MESSAGE t where mp_id = #{mpid} order by t.xzsj desc
+	</select>
+	
+	<insert id="addBjxx" parameterType="com.casic27.jk.entity.Bjxx">
+		<selectKey keyProperty="id" resultType = "int" order="BEFORE"> 
+			select SEQ_DQB_JK.NEXTVAL from dual
+		</selectKey>
+		insert into DQB_MESSAGE
+		  (id
+		  , mp_id
+		  , message
+		  , xzsj
+		  )
+		values
+		  (#{id}
+		  , #{mpid}
+		  , #{message}
+		  , #{xzsj}
+		  )
+	</insert>	 -->
+</mapper>
